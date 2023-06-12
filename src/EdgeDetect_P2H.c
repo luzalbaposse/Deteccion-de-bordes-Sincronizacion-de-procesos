@@ -38,6 +38,10 @@ int main(int argc, char **argv) {
 
   // COMPLETE
 
+  pthread_t thread;
+  pthread_create(&thread, NULL, (void*) &processImage, NULL);
+  pthread_join(thread, NULL);
+  
   // Liberacion de memoria
   free(brightness);
   free(edges);

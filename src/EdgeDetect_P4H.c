@@ -36,7 +36,8 @@ int main(int argc, char **argv) {
 
   // Procesamiento de la imagen
 
-  // COMPLETE
+  // Completar con el procesamiento de la imagen
+  
 
   // Liberacion de memoria
   free(brightness);
