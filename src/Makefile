@@ -18,22 +18,22 @@ EdgeDetect_S: EdgeDetect_S.c common.c
 EdgeDetect_P2H: EdgeDetect_P2H.c common.c
 	mkdir -p build
 	make -C lib
-	gcc $(OBJS) $^ -o $@ -lm
+	gcc $(OBJS) $^ -o $@ -lm -lpthread
 
 EdgeDetect_P2V: EdgeDetect_P2V.c common.c
 	mkdir -p build
 	make -C lib
-	gcc $(OBJS) $^ -o $@ -lm
+	gcc $(OBJS) $^ -o $@ -lm -lpthread
 
 EdgeDetect_P4H: EdgeDetect_P4H.c common.c
 	mkdir -p build
 	make -C lib
-	gcc $(OBJS) $^ -o $@ -lm
+	gcc $(OBJS) $^ -o $@ -lm -lpthread
 
 EdgeDetect_P4V: EdgeDetect_P4V.c common.c
 	mkdir -p build
 	make -C lib
-	gcc $(OBJS) $^ -o $@ -lm
+	gcc $(OBJS) $^ -o $@ -lm -lpthread
 
 clean:
 	rm -fr $(BUILD_DIR)/*

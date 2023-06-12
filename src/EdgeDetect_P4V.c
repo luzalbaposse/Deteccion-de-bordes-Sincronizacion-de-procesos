@@ -17,6 +17,34 @@ uint8_t* brightness;
 uint8_t* edges;
 uint8_t* result;
 
+void* process1(void* arg) {
+  step1_brightness(width, height, data, brightness, 0, width/2-1, 0, height/2-1);
+  step2_edges(width, height, brightness, edges, 0, width/2, 0, height/2-1);
+  step3_merge(width, height, data, edges, result, 0, width/2, 0, height/2-1);
+  return NULL;
+}
+
+void* process2(void* arg) {
+  step1_brightness(width, height, data, brightness, width/2, width-1, 0, height/2-1);
+  step2_edges(width, height, brightness, edges, width/2+1, width-1, 0, height/2-1);
+  step3_merge(width, height, data, edges, result, width/2+1, width-1, 0, height/2-1);
+  return NULL;
+}
+
+void* process3(void* arg) {
+  step1_brightness(width, height, data, brightness, 0, width/2-1, height/2, height-1);
+  step2_edges(width, height, brightness, edges, 0, width/2, height/2+1, height-1);
+  step3_merge(width, height, data, edges, result, 0, width/2, height/2+1, height-1);
+  return NULL;
+}
+
+void* process4(void* arg) {
+  step1_brightness(width, height, data, brightness, width/2, width-1, height/2, height-1);
+  step2_edges(width, height, brightness, edges, width/2+1, width-1, height/2+1, height-1);
+  step3_merge(width, height, data, edges, result, width/2+1, width-1, height/2+1, height-1);
+  return NULL;
+}
+
 int main(int argc, char **argv) {
 
   char* inputFileName;
@@ -34,9 +62,19 @@ int main(int argc, char **argv) {
   edges = (uint8_t*) malloc(width * height);
   result = (uint8_t*) malloc(width * height * sizeof(bgra_t));
 
-  // Procesamiento de la imagen
+    // Procesamiento de la imagen
+  pthread_t threads[4];
+  pthread_create(&threads[0], NULL, process1, NULL);
+  pthread_create(&threads[1], NULL, process2, NULL);
+  pthread_create(&threads[2], NULL, process3, NULL);
+  pthread_create(&threads[3], NULL, process4, NULL);
 
-  // COMPLETE
+  for (int i = 0; i < 4; ++i) {
+    pthread_join(threads[i], NULL);
+  }
+
+  // Merge de los resultados
+  mergeResults(width, height, data, edges, result);
 
   // Liberacion de memoria
   free(brightness);

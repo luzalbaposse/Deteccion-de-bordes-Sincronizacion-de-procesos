@@ -17,6 +17,33 @@ uint8_t* brightness;
 uint8_t* edges;
 uint8_t* result;
 
+void* process1(void* arg) {
+  step1_brightness(width, height, data, brightness, 0, width/4-1, 0, height);
+  step2_edges(width, height, brightness, edges, 0, width/4, 0, height-1);
+  step3_merge(width, height, data, edges, result, 0, width/4, 0, height-1);
+  return NULL;
+}
+
+void* process2(void* arg) {
+  step1_brightness(width, height, data, brightness, width/4, width/2-1, 0, height);
+  step2_edges(width, height, brightness, edges, width/4+1, width/2-1, 0, height-1);
+  step3_merge(width, height, data, edges, result, width/4+1, width/2-1, 0, height-1);
+  return NULL;
+}
+
+void* process3(void* arg) {
+  step1_brightness(width, height, data, brightness, width/2, 3*width/4-1, 0, height);
+  step2_edges(width, height, brightness, edges, width/2+1, 3*width/4-1, 0, height-1);
+  step3_merge(width, height, data, edges, result, width/2+1, 3*width/4-1, 0, height-1);
+  return NULL;
+}
+
+void* process4(void* arg) {
+  step1_brightness(width, height, data, brightness, 3*width/4, width-1, 0, height);
+  step2_edges(width, height, brightness, edges, 3*width/4+1, width-1, 0, height-1);
+  step3_merge(width, height, data, edges, result, 3*width/4+1, width-1, 0, height-1);
+  return NULL;
+}
 int main(int argc, char **argv) {
 
   char* inputFileName;
@@ -35,9 +62,21 @@ int main(int argc, char **argv) {
   result = (uint8_t*) malloc(width * height * sizeof(bgra_t));
 
   // Procesamiento de la imagen
+  pthread_t thread1, thread2, thread3, thread4;
+  pthread_create(&thread1, NULL, process1, NULL);
+  pthread_create(&thread2, NULL, process2, NULL);
+  pthread_create(&thread3, NULL, process3, NULL);
+  pthread_create(&thread4, NULL, process4, NULL);
 
+<<<<<<< HEAD
   // Completar con el procesamiento de la imagen
   
+=======
+  pthread_join(thread1, NULL);
+  pthread_join(thread2, NULL);
+  pthread_join(thread3, NULL);
+  pthread_join(thread4, NULL);
+>>>>>>> 057c00647d7208006c9d4a08a0c4ae57d3191289
 
   // Liberacion de memoria
   free(brightness);

@@ -80,9 +80,9 @@ void step3_merge(int width, int height, uint8_t* data, uint8_t* edges, uint8_t* 
   for(int i=hFrom; i<hTo; i++) {
     for(int j=wFrom; j<wTo; j++) {
           uint8_t value = SAT(e[i][j] * 10);
-          r[i][j].r = (value * image[i][j].r) /255;
-          r[i][j].g = (value * image[i][j].g) /255;
-          r[i][j].b = (value * image[i][j].b) /255;
+          r[i][j].r = (value * image[i][j].r) / 255;
+          r[i][j].g = (value * image[i][j].g) / 255;
+          r[i][j].b = (value * image[i][j].b) / 255;
           r[i][j].a = 255;
     }
   }

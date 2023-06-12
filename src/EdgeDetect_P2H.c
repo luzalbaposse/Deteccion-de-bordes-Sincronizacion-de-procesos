@@ -17,6 +17,12 @@ uint8_t* brightness;
 uint8_t* edges;
 uint8_t* result;
 
+static void* process2(__attribute__((unused)) void* _) {
+  step1_brightness(width, height, data, brightness, 0, width, 0, height/2);
+  step2_edges(width, height, brightness, edges, 1, width-1, 1, height/2);
+  step3_merge(width, height, data, edges, result, 1, width-1, 1, height/2);
+}
+
 int main(int argc, char **argv) {
 
   char* inputFileName;
@@ -35,8 +41,15 @@ int main(int argc, char **argv) {
   result = (uint8_t*) malloc(width * height * sizeof(bgra_t));
 
   // Procesamiento de la imagen
+  pthread_t thread;
+  pthread_create(&thread, NULL, process2, NULL);
 
-  // COMPLETE
+  step1_brightness(width, height, data, brightness, 0, width, height/2-1, height);
+  step2_edges(width, height, brightness, edges, 1, width-1, height/2, height-1);
+  step3_merge(width, height, data, edges, result, 1, width-1, height/2, height-1);
+
+  pthread_join(thread, NULL);
+  paintEdges(width, height, result);
 
   pthread_t thread;
   pthread_create(&thread, NULL, (void*) &processImage, NULL);
